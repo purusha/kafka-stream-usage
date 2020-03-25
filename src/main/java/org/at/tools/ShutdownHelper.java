@@ -27,6 +27,12 @@ public abstract class ShutdownHelper {
 		System.out.println(topology.describe());
 
 		final KafkaStreams streams = new KafkaStreams(topology, props);
+		
+		streams.setUncaughtExceptionHandler((Thread t, Throwable e) -> {
+			System.out.println("Exception on thread " + t.getName() + " :");
+			System.out.println(e.getStackTrace());
+		});
+		
 		final CountDownLatch latch = new CountDownLatch(1);
 
 		// attach shutdown handler to catch control-c
